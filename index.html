@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINKARKES - Cek Dokumen</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #32b5b4;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --border-color: #e5e5e5;
+            --bg-light: #f9f9f9;
+            --footer-bg: #111111;
+            --footer-text: #999999;
+            --cert-bg: #eadd9a; /* Yellow gradient base */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* ----- HEADER ----- */
+        header {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 20px 5%;
+            background-color: #fff;
+            border-top: 20px solid var(--primary-blue);
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logo-icons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-text {
+            font-size: 44px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .logo-text .sin { color: #444; }
+        .logo-text .karkes { color: #00bef0; }
+        
+        .logo-img {
+            height: 50px;
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 20px;
+            padding-bottom: 5px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            padding: 8px 35px 8px 15px;
+            font-size: 13px;
+            width: 250px;
+            outline: none;
+        }
+        
+        .search-container input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-container button {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .main-menu ul {
+            list-style: none;
+            display: flex;
+            gap: 15px;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+
+        .main-menu > ul > li {
+            position: relative;
+        }
+
+        .main-menu a {
+            text-decoration: none;
+            color: var(--primary-blue);
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+            letter-spacing: 0.5px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+        
+        .main-menu > ul > li:hover > a {
+            background-color: var(--primary-blue);
+            color: white;
+        }
+
+        .main-menu a i.fa-chevron-down {
+            font-size: 10px;
+            margin-left: 2px;
+        }
+
+        .main-menu a .fa-lock {
+            margin-left: 4px;
+        }
+
+        /* ================= DROPDOWN MENU (FINAL CLEAN) ================= */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    min-width: 260px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    border-top: 3px solid var(--primary-blue);
+    z-index: 100;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+
+    /* animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.25s ease;
+}
+
+/* ================= DESKTOP ONLY (HOVER) ================= */
+@media (min-width: 992px) {
+    .main-menu > ul > li:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+/* ================= ITEM STYLE ================= */
+.dropdown-menu li {
+    width: 100%;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 5px 16px;
+    color: #444;
+    font-weight: 500;
+    font-size: 13.5px;
+    line-height: 1.3;
+    border-bottom: 1px solid #e5e5e5;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+/* ================= HOVER EFFECT ================= */
+.dropdown-menu a:hover {
+    background-color: var(--primary-blue);
+    color: #fff;
+    padding-left: 22px;
+}
+
+/* ================= LAST ITEM ================= */
+.dropdown-menu li:last-child a {
+    border-bottom: none;
+}
+
+/* ================= MOBILE VERSION ================= */
+@media (max-width: 991px) {
+
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border-top: none;
+        padding-left: 15px;
+
+        /* Make sure it's strictly hidden by default */
+        display: none !important;
+        
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        transition: none; /* disable transition on mobile to allow instant hide/show */
+    }
+
+    .main-menu > ul > li.open .dropdown-menu {
+        display: flex !important;
+    }
+}
+        .menu-toggle {
+            display: none;
+            background-color: #5bbdbb;
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            font-size: 22px;
+            cursor: pointer;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ----- HERO BANNER ----- */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-image: url('gambar.jpg.jpeg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-start;
+            padding-top: 50px;
+            padding-left: 5%;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+        }
+
+        .hero-title {
+            position: relative;
+            color: white;
+            font-size: 42px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* ----- MAIN CONTENT ----- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-title {
+            color: var(--primary-blue);
+            font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--primary-blue);
+        }
+
+        .info-text {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        /* TATA CARA (STEPS) */
+        .steps-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-left: 20px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .step-number {
+            background-color: var(--primary-blue);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-text {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* ----- FORM SECTION ----- */
+        .search-form {
+            background-color: var(--bg-light);
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-top: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            color: #333;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px top 50%;
+            background-size: 10px auto;
+        }
+
+        .btn-search {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-search:hover {
+            background-color: #289695;
+        }
+
+        /* Container to allow horizontal scroll of the entire table on mobile */
+        .cert-outer-wrapper {
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .certificate-wrapper {
+            /* Background kuning krem (gradient lembut) */
+            background: linear-gradient(135deg, #fcefa9 0%, #f4e189 100%);
+            position: relative;
+            padding: 50px 40px;
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+            color: #444;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+        
+        /* Efek warna biru muda di kiri bawah */
+        .certificate-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(144, 196, 235, 0.45) 0%, rgba(244, 225, 137, 0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Watermark logo besar transparan di tengah */
+        .cert-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background-image: url('logo trasnparan.png'); 
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.08; /* opacity 0.05 - 0.1 */
+            z-index: 1;
+        }
+
+        .cert-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cert-logo-garuda img {
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+
+        .cert-logos-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .cert-logos-group img {
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .cert-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .cert-subtitle {
+            font-size: 15px;
+            font-weight: 400;
+            color: #777;
+        }
+
+        .cert-body {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cert-top-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .patient-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0; /* Spasi rapat */
+            color: #555; /* Font warna abu gelap */
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .patient-name {
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .qr-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: transparent;
+        }
+
+        .qr-code-box {
+            width: 125px;
+            height: 125px;
+            background-color: white;
+            padding: 12px; /* Tebal bingkai putih */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-text {
+            font-size: 13px;
+            margin-top: 8px;
+            color: #777;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .cert-regulations {
+            font-size: 13px;
+            font-weight: 700;
+            color: #555;
+            text-align: left;
+            margin-bottom: 2px;
+        }
+
+        .cert-reg-sub {
+            font-size: 12px;
+            font-weight: 400;
+            color: #666;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        /* Certificate Table Area */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+        }
+
+        .vaccine-grid {
+            width: 100%;
+            min-width: 750px; /* Force minimum width to enable scroll on mobile */
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .vaccine-grid th, .vaccine-grid td {
+            text-align: left;
+            vertical-align: top;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Border putih transparan */
+        }
+
+        .vaccine-grid th {
+            font-weight: 700;
+            color: #444;
+            background-color: rgba(0, 0, 0, 0.06); /* Background header agak lebih gelap */
+        }
+        
+        .vaccine-grid td {
+            color: #444;
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .vaccine-grid th span {
+            display: block;
+            font-weight: 400;
+            font-size: 11px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Disclaimer Footer in Cert */
+        .cert-footer-info {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 13px;
+            color: #666;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .cert-footer-info strong {
+            display: block;
+            margin-bottom: 2px;
+            color: #444;
+            font-weight: 700;
+        }
+        
+        .disclaimer-block {
+            margin-bottom: 20px;
+        }
+
+        /* ----- FOOTER ----- */
+        footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 50px 5% 20px;
+            font-size: 14px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h3 {
+            color: white;
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-col p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .footer-col ul li::before {
+            content: "•";
+            color: var(--footer-text);
+        }
+
+        .icon-text {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .icon-text i {
+            margin-top: 4px;
+            color: #ccc;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between; /* Space out copyright and button */
+            align-items: center; /* Vertically align them */
+            flex-wrap: wrap; /* Allow wrapping on very small screens before breakpoint */
+            gap: 15px;
+        }
+        
+        .footer-bottom-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .footer-bottom img {
+            height: auto;
+            max-height: 60px;
+            max-width: 100%;
+            object-fit: contain;
+            margin-bottom: 5px;
+        }
+
+        .copyright-text {
+            font-size: 12px;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        .contact-us-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+        
+        .contact-us-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 991px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding-bottom: 20px; /* Removed extra padding previously used for the menu toggle at the bottom */
+            }
+            .header-right {
+                width: 100%;
+                display: none;
+                flex-direction: column; /* Search bar on top, Menu below */
+                align-items: stretch; /* Full width for children */
+                margin-top: 20px;
+                gap: 15px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+            }
+            .header-right.active {
+                display: flex;
+            }
+            .search-container {
+                width: 100%;
+            }
+            .search-container input {
+                width: 100%;
+                max-width: 100%; /* Make search input full width on mobile */
+                padding: 12px 40px 12px 15px; /* Better padding for mobile */
+            }
+            .main-menu ul {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+                align-items: stretch;
+            }
+            .main-menu > ul > li {
+                width: 100%;
+            }
+            .main-menu > ul > li > a {
+                justify-content: space-between;
+                width: 100%;
+                padding: 12px 15px;
+                background-color: #f5f5f5; /* Light background for full width touch area */
+                border-bottom: 1px solid #eaeaea;
+                border-radius: 4px;
+            }
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border-top: none;
+                padding-left: 15px;
+                display: none;
+            }
+            .main-menu > ul > li.mobile-open .dropdown-menu,
+            .main-menu > ul > li.open .dropdown-menu {
+                display: flex;
+            }
+            .menu-toggle {
+                display: flex;
+                position: absolute;
+                right: 5%;
+                top: 70px; /* Positioned below the logo on the right side */
+                background-color: #5ab1ad; /* Match the teal color from the image */
+                border-radius: 4px;
+                padding: 5px 10px;
+                height: 35px;
+                width: 40px;
+            }
+            .logo-container {
+                align-items: center;
+                width: 100%; /* Ensure it centers */
+                justify-content: center;
+                display: flex;
+                margin-bottom: 20px;
+            }
+            .logo-container img {
+                height: 50px; /* Adjust logo height based on image */
+            }
+            .logo-text { font-size: 38px; }
+            .logo-icons { align-self: center; }
+        }
+        @media (max-width: 768px) {
+            .hero-title { font-size: 32px; }
+            .cert-outer-wrapper { padding: 0; }
+            .certificate-wrapper { padding: 25px 25px; border-radius: 0; min-width: 100%; box-shadow: none; }
+            .footer-bottom { flex-direction: column; align-items: flex-start; text-align: left; }
+            .contact-us-btn { align-self: flex-end; margin-top: 10px; }
+            
+            /* Responsive layout for cert info - keep row structure */
+            .cert-title { font-size: 16px; margin-bottom: 5px; line-height: 1.3;}
+            .cert-subtitle { font-size: 11px; }
+            .cert-logo-garuda img { height: 90px; margin-bottom: 15px;}
+            
+            .cert-top-info {
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: space-between;
+                margin-bottom: 20px;
+                gap: 15px;
+            }
+            
+            .patient-info { flex: 1; display: flex; flex-direction: column; gap: 2px;}
+            .patient-name { font-size: 14px; margin-bottom: 2px;}
+            #certPassport, #certDob { font-size: 12px; }
+            
+            .qr-section {
+                flex-shrink: 0;
+                align-items: center; /* Center the box and text */
+                padding-left: 0;
+            }
+            .qr-code-box {
+                width: 80px;
+                height: 80px;
+                padding: 6px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .qr-code-box img, .qr-code-box canvas {
+                max-width: 100% !important;
+                height: auto !important;
+                object-fit: contain;
+            }
+            .qr-text {
+                font-size: 10px;
+                margin-top: 5px;
+                color: #777;
+                font-weight: 600;
+                text-align: center;
+            }
+
+            .cert-regulations { font-size: 12px; margin-bottom: 4px;}
+            .cert-reg-sub { font-size: 11px; margin-bottom: 12px; }
+
+            /* Force table to fit exactly inside screen without a horizontal scrollbar */
+            .vaccine-grid { width: 100%; min-width: unset; font-size: 8.5px; table-layout: fixed; }
+            .vaccine-grid th, .vaccine-grid td { padding: 6px 3px; word-break: break-word; hyphens: auto; }
+            .vaccine-grid th span { font-size: 7.5px; margin-top: 2px; }
+            .cert-footer-info { margin-top: 30px; font-size: 11px; }
+            .cert-watermark { width: 300px; height: 300px; }
+        }
+
+        @media (max-width: 480px) {
+            .certificate-wrapper { 
+                padding: 20px 10px;
+            }
+            .vaccine-grid { font-size: 7.5px; }
+            .vaccine-grid th, .vaccine-grid td { padding: 4px 3px; word-break: break-word; }
+        }
+
+        /* ===== MODAL LOGIN ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 40px 35px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            position: relative;
+            animation: modalIn 0.25s ease;
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .modal-box h3 {
+            color: #32b5b4;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        .modal-box p.modal-sub {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 18px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: #aaa;
+            line-height: 1;
+        }
+        .modal-close:hover { color: #555; }
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            transition: border 0.2s;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .modal-input:focus {
+            outline: none;
+            border-color: #32b5b4;
+        }
+        .modal-btn {
+            width: 100%;
+            padding: 13px;
+            background: #32b5b4;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .modal-btn:hover { background: #289695; }
+        .modal-btn:disabled { background: #aaa; cursor: not-allowed; }
+        .modal-error {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+            text-align: center;
+        }
+    </style>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Firebase shared config (removes duplication) -->
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <img src="logo sinkarkes.png" alt="SINKARKES Logo" style="height: 60px;">
+        </div>
+
+        <div class="header-right" id="headerRight">
+            <form class="search-container" action="about:blank" target="_blank" method="get">
+                <input type="text" placeholder="Search..." name="q">
+                <button type="submit"><i class="fa-solid fa-search"></i></button>
+            </form>
+            <nav class="main-menu">
+                <ul>
+                    <li class="has-dropdown">
+                        <a href="#" onclick="toggleDropdown(event)">PELAYANAN <i class="fa-solid fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="about:blank" target="_blank">Registrasi Vaksinasi Internasional</a></li>
+                            <li><a href="about:blank" target="_blank">Layanan Kapal</a></li>
+                            <li><a href="about:blank" target="_blank">Deklarasi Pos Lintas Batas Negara</a></li>
+                            <li><a href="about:blank" target="_blank">Layanan Izin Sakit dan Laik Terbang</a></li>
+                            <li><a href="about:blank" target="_blank">Cek Nomer Dokumen</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="#" onclick="toggleDropdown(event)">IHR <i class="fa-solid fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="about:blank" target="_blank">Berita</a></li>
+                            <li><a href="about:blank" target="_blank">Referensi</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="#" onclick="toggleDropdown(event)">BERITA <i class="fa-solid fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="about:blank" target="_blank">Berita Nasional</a></li>
+                            <li><a href="about:blank" target="_blank">Berita Dunia</a></li>
+                            <li><a href="about:blank" target="_blank">Berita Seputar Balai Karkes</a></li>
+                            <li><a href="about:blank" target="_blank">Pengumuman</a></li>
+                            <li><a href="about:blank" target="_blank">Kegiatan</a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="#" onclick="toggleDropdown(event)">PERATURAN <i class="fa-solid fa-chevron-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="about:blank" target="_blank">Regulasi Presiden</a></li>
+                            <li><a href="about:blank" target="_blank">Peraturan Pemerintah</a></li>
+                            <li><a href="about:blank" target="_blank">Regulasi Menteri Kesehatan</a></li>
+                            <li><a href="about:blank" target="_blank">Regulasi Menteri Lainnya</a></li>
+                            <li><a href="about:blank" target="_blank">Regulasi Dirjen P2P</a></li>
+                            <li><a href="about:blank" target="_blank">Regulasi Dirjen Kemkes Lainnya</a></li>
+                            <li><a href="about:blank" target="_blank">Regulasi Dirjen Lainnya</a></li>
+                            <li><a href="about:blank" target="_blank">UU & Peraturan Lainnya</a></li>
+                            <li><a href="about:blank" target="_blank">Referensi & Peraturan</a></li>
+                            <li><a href="about:blank" target="_blank">International Health Regulations</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about:blank" target="_blank">PROFIL BALAI KARKES</a></li>
+                    <li><a href="about:blank" target="_blank">VISI MISI</a></li>
+                    <li><a href="about:blank" target="_blank">FASKES</a></li>
+                    <li><a href="#" onclick="openLoginModal(); return false;">LOGIN <i class="fa-solid fa-lock"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <button class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="hero">
+        <h1 class="hero-title"><i class="fa-regular fa-square-check"></i> Cek Dokumen</h1>
+    </div>
+
+    <!-- Main Content (Information & Form) -->
+    <div class="container">
+        
+        <div class="info-section">
+            <h2 class="section-title">Apa Itu Cek Nomor Dokumen?</h2>
+            <p class="info-text">
+                Cek nomor dokumen adalah sebuah fitur yang kami sediakan untuk memastikan keaslian dokumen atau sertifikat yang dikeluarkan dan telah terdaftar pada database sertifikat nasional Balai Kekarantinaan Kesehatan Republik Indonesia.
+            </p>
+
+            <h2 class="section-title">Tata Cara Pencarian</h2>
+            <ul class="steps-list">
+                <li class="step-item">
+                    <span class="step-number">1</span>
+                    <p class="step-text">Pilih Dokumen atau Sertifikat yang akan dicek pada kolom pilihan Jenis Dokumen</p>
+                </li>
+                <li class="step-item">
+                    <span class="step-number">2</span>
+                    <p class="step-text">Masukan No Registrasi untuk Buku Kesehatan Kapal atau Nomor ICV pada kolom Nomor Dokumen/IMO No/Barcode untuk melakukan pengecekan keaslian Dokumen</p>
+                </li>
+                <li class="step-item">
+                    <span class="step-number">3</span>
+                    <p class="step-text">Masukan Barcode yang tertera pada sertifikat pada kolom Nomor Dokumen/IMO No/Barcode untuk melakukan pengecekan Sertifikat Lainnya</p>
+                </li>
+                <li class="step-item">
+                    <span class="step-number">4</span>
+                    <p class="step-text">Lalu klik tombol Cari yang terdapat dibawah kolom Nomor Dokumen/IMO No/Barcode</p>
+                </li>
+            </ul>
+        </div>
+
+        <div class="search-form" id="searchFormArea">
+            <div class="form-group">
+                <label class="form-label">Jenis Dokumen</label>
+                <select class="form-control" id="documentType">
+                    <option value="ICV">ICV</option>
+                    <option value="Buku_Kesehatan_Kapal">Buku Kesehatan Kapal</option>
+                    <option value="Sertifikat_Lainnya">Sertifikat Lainnya</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nomor Dokumen/IMO No/Barcode/No. Porsi</label>
+                <input type="text" class="form-control" id="documentNumber" placeholder="Masukkan Kode Unik (misal: UNIK123)">
+            </div>
+            <button class="btn-search" id="btnSearch" style="width: fit-content;"><i class="fa-solid fa-magnifying-glass"></i> Cari</button>
+            <div id="searchError" style="color: red; margin-top: 10px; display: none; font-size: 14px;">Data tidak ditemukan!</div>
+        </div>
+
+    </div>
+
+    <!-- ICV Certificate Result Section -->
+    <div class="cert-outer-wrapper" id="certResult" style="display: none;">
+        <div class="certificate-wrapper">
+            <div class="cert-watermark"></div> <!-- Background Watermark -->
+            
+            <div class="cert-header">
+                <div class="cert-logo-garuda">
+                    <img src="logosertifikat.png" alt="Logo SINKARKES" style="max-height: 120px; object-fit: contain;">
+                </div>
+                <h2 class="cert-title">International Certificate of Vaccination (Prophylaxis)</h2>
+                <p class="cert-subtitle">Certificat International de Vaccination ou de Prophylaxie</p>
+            </div>
+
+            <div class="cert-body">
+                
+                <div class="cert-top-info">
+                    <div class="patient-info">
+                        <div class="patient-name" id="certName">NORLIDA WATI</div>
+                        <div id="certPassport">Passport X8505227</div>
+                        <div id="certDob">22nd January 1988</div>
+                    </div>
+                    
+                    <div class="qr-section">
+                        <div class="qr-code-box">
+                            <div id="qrcode" style="width: 100%; height: 100%;"></div>
+                        </div>
+                        <div class="qr-text" id="certCode">E26-000279341</div>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="cert-regulations">In accordance with the International Health Regulations</p>
+                    <p class="cert-reg-sub">comportement au Reglement sanitaire international</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="vaccine-grid">
+                        <thead>
+                            <tr>
+                                <th style="width: 22%;">Vaccine or Prophylaxis<br><span>Vaccin ou agent prophylactique</span></th>
+                                <th style="width: 28%;">Manufacturer and Batch no. of vaccine or prophylaxis<br><span>Fabirant du vaccin ou de l'agent prophylactique prophylactique et numero du lot</span></th>
+                                <th style="width: 12%;">Date<br><span>Date</span></th>
+                                <th style="width: 13%;">Valid Until<br><span>Valiable jusqu'au</span></th>
+                                <th style="width: 25%;">Administering Location & Supervising Clinician<br><span>Lieu d'administration et Clinicien superviseur</span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="vaccineTableBody">
+                            <!-- Data akan dimuat dengan JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="vaccine-grid" style="margin-top: 15px;">
+                        <thead>
+                            <tr>
+                                <th style="width: 22%;">Disease targeted</th>
+                                <th style="width: 12%;">Date</th>
+                                <th style="width: 28%;">Manufacture and Batch No. of vaccine<br>or prophylaxis</th>
+                                <th style="width: 13%;">Next Booster</th>
+                                <th style="width: 25%;">Official stamp and signature</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="cert-footer-info">
+                <div class="disclaimer-block">
+                    <strong>Penafisan (Disclaimer):</strong>
+                    Nomor kode ICV elektronik (eICV) berbeda dengan nomor seri ICV fisik
+                </div>
+                
+                <div class="disclaimer-block">
+                    <strong>This certificate was issued by Ministry of Health of Indonesia</strong>
+                    Ce certificat a été délivré par le ministère Indonésien de la Santé
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-grid">
+            
+            <!-- Column 1: Help Desk -->
+            <div class="footer-col">
+                <h3><i class="fa-solid fa-life-ring"></i> Help Desk</h3>
+                <p>Direktorat Surveilans dan Karantina Kesehatan<br>
+                Direktorat Jenderal Pencegahan dan Pengendalian Penyakit<br>
+                Kementerian Kesehatan RI</p>
+                
+                <div class="icon-text" style="margin-top: 20px;">
+                    <i class="fa-solid fa-building"></i>
+                    <div>
+                        <p style="margin-bottom:0;">Kantor Ditjen P2P</p>
+                        <p>Kementerian Kesehatan Republik Indonesia Gedung dr. M. Adhyatma lantai 6</p>
+                    </div>
+                </div>
+
+                <div class="icon-text">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <p>Jl. HR Rasuna Said Kav. X-5 No. 4-9<br>Jakarta Selatan</p>
+                </div>
+
+                <div class="icon-text">
+                    <i class="fa-solid fa-envelope"></i>
+                    <p>sinkarkes.kemkes.go.id</p>
+                </div>
+            </div>
+
+            <!-- Column 2: Pelayanan & Sinkarkes -->
+            <div class="footer-col">
+                <h3><i class="fa-solid fa-user-doctor"></i> Pelayanan</h3>
+                <ul>
+                    <li>Registrasi Vaksinasi Internasional</li>
+                    <li>Kontak Kami</li>
+                </ul>
+
+                <h3 style="margin-top: 30px;"><i class="fa-solid fa-lock"></i> SINKARKES</h3>
+                <ul>
+                    <li>Login</li>
+                    <li>Email</li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Balai Karkes -->
+            <div class="footer-col">
+                <h3><i class="fa-solid fa-hospital"></i> Balai Karkes</h3>
+                <ul>
+                    <li>Profil Balai Kekarantinaan Kesehatan</li>
+                    <li>Berita</li>
+                    <li>Pengumuman</li>
+                    <li>Kegiatan</li>
+                    <li>Referensi & Peraturan</li>
+                    <li>International Health Regulations</li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Links -->
+            <div class="footer-col">
+                <h3><i class="fa-solid fa-link"></i> LINKS</h3>
+                <ul>
+                    <li>Kementerian Kesehatan</li>
+                    <li>Pusat Kesehatan Haji</li>
+                    <li>Direktorat Bina Gizi dan KIA</li>
+                    <li>Ditjen PP & PL</li>
+                    <li>Jaminan Kesehatan Nasional</li>
+                    <li>WHO</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <img src="logo karantina.png" alt="Logo Karantina Kesehatan">
+                <div class="copyright-text">
+                    Copyright ©2026 Direktorat Surveilans dan Karantina Kesehatan — Direktorat Jenderal Pencegahan dan Pengendalian Penyakit — Kementerian Kesehatan RI
+                </div>
+            </div>
+            <button class="contact-us-btn">Kontak Kami</button>
+        </div>
+    </footer>
+
+    <script>
+    // ==========================================
+    // 1. KONFIGURASI FIREBASE
+    // ==========================================
+    // GANTI CONFIG INI DENGAN CONFIG DARI PROJECT FIREBASE ANDA
+    const db = firebase.database();
+
+    // XSS-safe escape helper — prevents script injection from Firebase data
+    function esc(str) {
+        const d = document.createElement('div');
+        d.textContent = String(str || '');
+        return d.innerHTML;
+    }
+
+    // Referensi Element HTML
+    const certResult = document.getElementById('certResult');
+    const searchFormArea = document.getElementById('searchFormArea');
+    const searchError = document.getElementById('searchError');
+    const inputCode = document.getElementById('documentNumber');
+    const btnSearch = document.getElementById('btnSearch');
+
+    const certName = document.getElementById('certName');
+    const certPassport = document.getElementById('certPassport');
+    const certDob = document.getElementById('certDob');
+    const certCode = document.getElementById('certCode');
+    const vaccineTableBody = document.getElementById('vaccineTableBody');
+    const qrcodeContainer = document.getElementById('qrcode');
+
+    // Instance QRCode (library qrcode.js)
+    let qrInstance = null;
+
+    // ==========================================
+    // 2. FUNGSI LOAD DATA DARI FIREBASE
+    // ==========================================
+    function loadCertificateData(kodeUnik) {
+        if (!kodeUnik) return;
+
+        // Reset state error
+        searchError.style.display = 'none';
+
+        // Query ke Firebase path: /sertifikat/{kodeUnik}
+        // Struktur data di Firebase menyesuaikan kebutuhan
+        const certRef = db.ref('sertifikat/' + kodeUnik);
+
+        certRef.once('value').then((snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                tampilkanSertifikat(kodeUnik, data);
+            } else {
+                // Data tidak ditemukan
+                certResult.style.display = 'none';
+                searchError.style.display = 'block';
+                searchError.innerText = "Data dokumen tidak ditemukan untuk kode: " + kodeUnik;
+            }
+        }).catch((error) => {
+            console.error("Gagal mengambil data dari Firebase", error);
+            searchError.style.display = 'block';
+            searchError.innerText = "Terjadi kesalahan sistem saat menghubungi database.";
+        });
+    }
+
+    // ==========================================
+    // 3. FUNGSI TAMPILKAN SERTIFIKAT KE HTML
+    // ==========================================
+    function tampilkanSertifikat(kodeUnik, data) {
+        // Tampilkan Container Sertifikat
+        certResult.style.display = 'block';
+        
+        // Isi Data Identitas
+        certName.innerText = (data.nama || "-").toUpperCase();
+        certPassport.innerText = "Passport " + (data.passport || "-");
+        certDob.innerText = data.tanggal_lahir || "-";
+        certCode.innerText = kodeUnik;
+
+        // Kosongkan tabel vaksin
+        vaccineTableBody.innerHTML = "";
+
+        let hasPolio = false;
+
+        // Looping Data Vaksin (array di Firebase: data.vaksin)
+        if (data.vaksin && Array.isArray(data.vaksin)) {
+            data.vaksin.forEach(v => {
+                if (v.nama && v.nama.toUpperCase().includes("POLIO")) {
+                    hasPolio = true;
+                }
+                const tr = document.createElement('tr');
+                const namaEsc = esc(v.nama || '').toUpperCase().replace(/ /g, '<br>');
+                const batchEsc = esc(v.batch || '-');
+                const tglEsc = esc(v.tanggal || '-').replace(/ /g, '<br>');
+                const berlakuEsc = esc(v.berlaku || '-').replace(/ /g, '<br>');
+                const lokasiEsc = esc(v.lokasi || '-');
+                tr.innerHTML = `
+                    <td><strong>${namaEsc}</strong></td>
+                    <td>${batchEsc}</td>
+                    <td>${tglEsc}</td>
+                    <td>${berlakuEsc}</td>
+                    <td>${lokasiEsc}</td>
+                `;
+                vaccineTableBody.appendChild(tr);
+            });
+        }
+        
+        // Ensure at least default data if array is empty
+        if (vaccineTableBody.innerHTML.trim() === "") {
+            vaccineTableBody.innerHTML = `
+                <tr>
+                    <td><strong>MENINGITIS<br>MENINGOCOCCUS</strong></td>
+                    <td>MERSI E3202409012</td>
+                    <td>12th<br>March<br>2026</td>
+                    <td>26th March<br>2029</td>
+                    <td>Cilegon (Pelabuhan Laut Merak) /<br>Klinik Sofie / ELRIAN SYAPUTRA</td>
+                </tr>
+                <tr>
+                    <td><strong>POLIO</strong></td>
+                    <td>BIOFARMA 21000925</td>
+                    <td>12th<br>March<br>2026</td>
+                    <td>26th March<br>2027</td>
+                    <td>Cilegon (Pelabuhan Laut Merak) /<br>Klinik Sofie / ELRIAN SYAPUTRA</td>
+                </tr>
+            `;
+        }
+
+        // Generate QR Code Berisi URL saat ini + parameter ?kode=
+        const currentUrlBase = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        const qrUrl = currentUrlBase + "?kode=" + kodeUnik;
+
+        // Hapus QR lama jika ada
+        qrcodeContainer.innerHTML = "";
+        
+        // Buat QR Baru
+        qrInstance = new QRCode(qrcodeContainer, {
+            text: qrUrl,
+            width: 100,
+            height: 100,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.M
+        });
+
+        // Scroll ke view sertifikat
+        certResult.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // 4. AUTO LOAD DARI URL PARAMETER (?kode=)
+    // ==========================================
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const kodeParam = urlParams.get('kode');
+
+        if (kodeParam) {
+            // Jika ada parameter kode di URL, auto load
+            inputCode.value = kodeParam; // Isi ke input
+            loadCertificateData(kodeParam);
+        }
+    });
+
+    // ==========================================
+    // 5. EVENT LISTENER TOMBOL CARI
+    // ==========================================
+    btnSearch.addEventListener('click', (e) => {
+        e.preventDefault();
+        const kode = inputCode.value.trim();
+        if (kode) {
+            // Ubah url tanpa reload agar klo dishare tetep linknya pas
+            const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?kode=' + kode;
+            window.history.pushState({path:newUrl},'',newUrl);
+            
+            loadCertificateData(kode);
+        } else {
+            alert('Harap masukkan kode dokumen.');
+        }
+    });
+
+    // Mobile Menu Toggle
+    function toggleMenu() {
+        const menu = document.getElementById('headerRight');
+        menu.classList.toggle('active');
+    }
+
+    function toggleDropdown(event) {
+        if (window.innerWidth <= 991) {
+            event.preventDefault();
+
+            const parentLi = event.currentTarget.parentElement;
+
+            // Tutup dropdown lain
+            document.querySelectorAll('.main-menu > ul > li').forEach(li => {
+                if (li !== parentLi) {
+                    li.classList.remove('open');
+                }
+            });
+
+            // Toggle dropdown
+            parentLi.classList.toggle('open');
+        }
+    }
+
+    // Klik luar → tutup semua dropdown
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.main-menu')) {
+            document.querySelectorAll('.main-menu > ul > li').forEach(li => {
+                li.classList.remove('open');
+            });
+        }
+    });
+</script>
+
+<!-- ===== MODAL LOGIN ===== -->
+<div class="modal-overlay" id="loginModal" onclick="handleModalBackdrop(event)">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeLoginModal()" title="Tutup">&times;</button>
+        <h3><i class="fa-solid fa-lock" style="font-size:18px;margin-right:8px;"></i> Login SINKARKES</h3>
+        <p class="modal-sub">Masukkan email dan password Anda untuk melanjutkan.</p>
+        <input class="modal-input" type="email" id="modalEmail" placeholder="Email" autocomplete="email">
+        <input class="modal-input" type="password" id="modalPassword" placeholder="Password" autocomplete="current-password">
+        <button class="modal-btn" id="modalLoginBtn" onclick="doAdminLogin()">
+            <i class="fa-solid fa-right-to-bracket"></i> Masuk
+        </button>
+        <p class="modal-error" id="modalError">⚠️ Email atau password salah. Silakan coba lagi.</p>
+    </div>
+</div>
+
+<script>
+    // Inisialisasi Firebase Auth untuk modal login
+    const auth = firebase.auth();
+
+    function openLoginModal() {
+        document.getElementById('loginModal').classList.add('active');
+        document.getElementById('modalEmail').focus();
+        document.getElementById('modalError').style.display = 'none';
+        document.getElementById('modalEmail').value = '';
+        document.getElementById('modalPassword').value = '';
+    }
+
+    // Auto-buka modal login jika diarahkan dari admin.html (?login=1)
+    if (new URLSearchParams(window.location.search).get('login') === '1') {
+        openLoginModal();
+    }
+
+    function closeLoginModal() {
+        document.getElementById('loginModal').classList.remove('active');
+    }
+
+    function handleModalBackdrop(e) {
+        // Tutup modal jika klik di luar kotak
+        if (e.target.id === 'loginModal') closeLoginModal();
+    }
+
+    // Enter key support
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeLoginModal();
+        if (e.key === 'Enter' && document.getElementById('loginModal').classList.contains('active')) {
+            doAdminLogin();
+        }
+    });
+
+    function doAdminLogin() {
+        const email = document.getElementById('modalEmail').value.trim();
+        const pass = document.getElementById('modalPassword').value;
+        const btn = document.getElementById('modalLoginBtn');
+        const errEl = document.getElementById('modalError');
+
+        if (!email || !pass) {
+            errEl.textContent = '⚠️ Email dan password wajib diisi.';
+            errEl.style.display = 'block';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memverifikasi...';
+        errEl.style.display = 'none';
+
+        auth.signInWithEmailAndPassword(email, pass)
+            .then(() => {
+                // Login berhasil → redirect ke admin.html
+                window.location.href = 'admin.html';
+            })
+            .catch(() => {
+                errEl.textContent = '⚠️ Email atau password salah. Silakan coba lagi.';
+                errEl.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Masuk';
+            });
+    }
+</script>
+</body>
+</html>

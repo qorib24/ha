@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Tambah Sertifikat</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .admin-container {
+            background: #fff;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: #32b5b4;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #32b5b4;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #32b5b4;
+        }
+
+        .section-title {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #555;
+            font-weight: 700;
+        }
+        
+        .vaccine-card {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background-color: #32b5b4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #289695;
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #eaffea;
+            border: 1px solid #c3e6c3;
+            border-radius: 4px;
+            display: none;
+            text-align: center;
+        }
+
+        .result-section p {
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .qr-wrapper {
+            background: white;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 4px;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .link-url {
+            word-break: break-all;
+            color: #00bef0;
+            font-weight: 600;
+        }
+
+        .btn-download {
+            background-color: #4CAF50;
+            margin-top: 10px;
+            display: inline-block;
+            text-decoration: none;
+            width: auto;
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .btn-download:hover {
+            background-color: #45a049;
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 15px; }
+            .admin-container { padding: 20px; }
+            input[type="text"], input[type="date"] { font-size: 16px; padding: 12px 10px; }
+        }
+
+        #loginWall h2 {
+            color: #32b5b4;
+            margin-bottom: 5px;
+            border-bottom: none;
+            padding-bottom: 0;
+            font-size: 22px;
+        }
+        #loginWall p {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+        #loginError {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Firebase Init (inline agar tidak bergantung file eksternal) -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8Hkwb-PYMeTdCwY0wfP3UVv7MFnGFZdE",
+            authDomain: "catatan-9a225.firebaseapp.com",
+            databaseURL: "https://catatan-9a225-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "catatan-9a225",
+            storageBucket: "catatan-9a225.firebasestorage.app",
+            messagingSenderId: "989304269442",
+            appId: "1:989304269442:web:e90f948a5f8b2bd795a29b"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+    </script>
+</head>
+<body>
+
+    <!-- ===== ADMIN FORM (shown only when authenticated) ===== -->
+    <div class="admin-container" id="adminPanel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <h2 style="margin-bottom:0;">Input Data Sertifikat Baru</h2>
+            <button class="btn" onclick="doLogout()" style="width:auto;padding:8px 15px;font-size:13px;background:#e74c3c;">Keluar</button>
+        </div>
+        
+        <form id="formAdmin">
+            <!-- Data Pasien -->
+            <div class="form-group">
+                <label>Nama Pasien</label>
+                <input type="text" id="nama" required placeholder="Contoh: BUDI SANTOSO">
+            </div>
+            <div class="form-group">
+                <label>Nomor Passport</label>
+                <input type="text" id="passport" required placeholder="Contoh: X8505098">
+            </div>
+            <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input type="text" id="tanggal_lahir" required placeholder="Contoh: 20th June 1999">
+            </div>
+
+            <!-- Data Vaksin 1 -->
+            <div class="section-title">Data Vaksin 1 (Meningitis)</div>
+            <div class="vaccine-card">
+                <div class="form-group">
+                    <label>Nama Vaksin</label>
+                    <input type="text" id="v1_nama" required value="MENINGITIS MENINGOCOCCUS" placeholder="Contoh: MENINGITIS MENINGOCOCCUS">
+                </div>
+                <div class="form-group">
+                    <label>Pabrikan & Batch Vaksin</label>
+                    <input type="text" id="v1_batch" required placeholder="Contoh: MERSI - E3202409012">
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Pemberian Vaksin</label>
+                    <input type="text" id="v1_tanggal" required placeholder="Contoh: 14th March 2026">
+                </div>
+                <div class="form-group">
+                    <label>Masa Berlaku (Valid Until)</label>
+                    <input type="text" id="v1_berlaku" required placeholder="Contoh: 28th March 2029">
+                </div>
+                <div class="form-group">
+                    <label>Lokasi & Supervisor Clinician</label>
+                    <input type="text" id="v1_lokasi" required placeholder="Contoh: Cilegon (Pelabuhan Laut Merak) / Klinik Sofie / ELRIAN SYAPUTRA">
+                </div>
+            </div>
+
+            <!-- Data Vaksin 2 -->
+            <div class="section-title">Data Vaksin 2 (Polio) - <em>Kosongkan jika tidak ada</em></div>
+            <div class="vaccine-card">
+                <div class="form-group">
+                    <label>Nama Vaksin</label>
+                    <input type="text" id="v2_nama" value="POLIO" placeholder="Contoh: POLIO">
+                </div>
+                <div class="form-group">
+                    <label>Pabrikan & Batch Vaksin</label>
+                    <input type="text" id="v2_batch" placeholder="Contoh: BIOFARMA 21000925">
+                </div>
+                <div class="form-group">
+                    <label>Tanggal Pemberian Vaksin</label>
+                    <input type="text" id="v2_tanggal" placeholder="Contoh: 14th March 2026">
+                </div>
+                <div class="form-group">
+                    <label>Masa Berlaku (Valid Until)</label>
+                    <input type="text" id="v2_berlaku" placeholder="Contoh: 28th March 2027">
+                </div>
+                <div class="form-group">
+                    <label>Lokasi & Supervisor Clinician</label>
+                    <input type="text" id="v2_lokasi" placeholder="Contoh: Cilegon (Pelabuhan Laut Merak) / Klinik Sofie / ELRIAN SYAPUTRA">
+                </div>
+            </div>
+
+            <button type="submit" class="btn" id="btnSimpan">Simpan & Generate QR</button>
+        </form>
+
+        <div class="result-section" id="resultSection">
+            <h3 style="color: #28a745; margin-bottom: 10px;">Berhasil Disimpan!</h3>
+            <p>Kode Unik: <strong id="outKode" style="font-size: 18px;"></strong></p>
+            <p>Link: <br><a href="#" id="outLink" class="link-url" target="_blank"></a></p>
+            
+            <div class="qr-wrapper">
+                <div id="qrcode"></div>
+            </div>
+            <br>
+            <a href="#" id="btnDownloadQr" class="btn btn-download" download="QR_Kode.png">Download QR Code</a>
+        </div>
+    </div>
+
+    <script>
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        // ===== AUTH: Jika belum login → redirect ke index.html =====
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('adminPanel').style.display = 'block';
+            } else {
+                // Belum login, kembalikan ke halaman utama
+                window.location.href = 'index.html?login=1';
+            }
+        });
+
+        function doLogout() {
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+
+        let qrInstance = null;
+
+        // 2. Fungsi Generate Kode Unik Sesuai Format Baru (E26-0012345678)
+        function generateUniqueCode() {
+            const yearStr = new Date().getFullYear().toString().slice(-2);
+            let randomDigits = '';
+            for (let i = 0; i < 8; i++) {
+                randomDigits += Math.floor(Math.random() * 10).toString();
+            }
+            return `E${yearStr}-00${randomDigits}`;
+        }
+
+        // 3. Event Listener Form Submit
+        document.getElementById('formAdmin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btnSimpan = document.getElementById('btnSimpan');
+            btnSimpan.innerText = "Mengecek Kode Unik...";
+            btnSimpan.disabled = true;
+            
+            // Ambil Value dari form
+            const nama = document.getElementById('nama').value.trim();
+            const passport = document.getElementById('passport').value.trim();
+            const tgl_lahir = document.getElementById('tanggal_lahir').value.trim();
+            
+            // Validasi format tanggal (contoh: "14th March 2026")
+            const datePattern = /^\d{1,2}(st|nd|rd|th)\s+[A-Za-z]+\s+\d{4}$/;
+            const v1_tgl_raw = document.getElementById('v1_tanggal').value.trim();
+            const v1_berlaku_raw = document.getElementById('v1_berlaku').value.trim();
+            if (!datePattern.test(v1_tgl_raw) || !datePattern.test(v1_berlaku_raw)) {
+                alert('⚠️ Format tanggal vaksin 1 tidak valid!\nGunakan format: 14th March 2026');
+                btnSimpan.innerText = 'Simpan & Generate QR';
+                btnSimpan.disabled = false;
+                return;
+            }
+            
+            // Vaksin 1
+            const v1_nama = document.getElementById('v1_nama').value.trim();
+            const v1_batch = document.getElementById('v1_batch').value.trim();
+            const v1_tgl = document.getElementById('v1_tanggal').value.trim();
+            const v1_berlaku = document.getElementById('v1_berlaku').value.trim();
+            const v1_lokasi = document.getElementById('v1_lokasi').value.trim();
+
+            // Vaksin 2
+            const v2_nama = document.getElementById('v2_nama').value.trim();
+            const v2_batch = document.getElementById('v2_batch').value.trim();
+            const v2_tgl = document.getElementById('v2_tanggal').value.trim();
+            const v2_berlaku = document.getElementById('v2_berlaku').value.trim();
+            const v2_lokasi = document.getElementById('v2_lokasi').value.trim();
+
+            let vaksinData = [
+                {
+                    nama: v1_nama,
+                    batch: v1_batch,
+                    tanggal: v1_tgl,
+                    berlaku: v1_berlaku,
+                    lokasi: v1_lokasi
+                }
+            ];
+
+            if (v2_nama !== "" || v2_batch !== "") {
+                vaksinData.push({
+                    nama: v2_nama,
+                    batch: v2_batch,
+                    tanggal: v2_tgl,
+                    berlaku: v2_berlaku,
+                    lokasi: v2_lokasi
+                });
+            }
+
+            // Struktur Data Firebase
+            const dataSertifikat = {
+                nama: nama,
+                passport: passport,
+                tanggal_lahir: tgl_lahir,
+                vaksin: vaksinData
+            };
+
+            // Fungsi rekursif dengan counter untuk validasi & simpan agar kode dipastikan unik
+            function periksaDanSimpan(attempt = 0) {
+                if (attempt >= 10) {
+                    alert("Gagal generate kode unik setelah 10 percobaan. Silakan coba lagi.");
+                    btnSimpan.innerText = "Simpan & Generate QR";
+                    btnSimpan.disabled = false;
+                    return;
+                }
+                const kodeUnik = generateUniqueCode();
+                
+                // Cek ke firebase apakah kode sudah ada
+                db.ref('sertifikat/' + kodeUnik).once('value')
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        // Kode sudah ada, generate ulang (passing counter)
+                        periksaDanSimpan(attempt + 1);
+                    } else {
+                        // Kode unik, simpan data ke Firebase
+                        btnSimpan.innerText = "Menyimpan Data...";
+                        db.ref('sertifikat/' + kodeUnik).set(dataSertifikat)
+                        .then(() => {
+                            btnSimpan.innerText = "Simpan & Generate QR";
+                            btnSimpan.disabled = false;
+                            tampilkanHasil(kodeUnik);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            alert("Gagal menyimpan ke Firebase!");
+                            btnSimpan.innerText = "Simpan & Generate QR";
+                            btnSimpan.disabled = false;
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.error("Gagal mengecek referensi kode:", err);
+                    alert("Gagal menghubungi database untuk validasi!");
+                    btnSimpan.innerText = "Simpan & Generate QR";
+                    btnSimpan.disabled = false;
+                });
+            }
+
+            // Jalankan siklus pertama validasi & penyimpanan
+            periksaDanSimpan(0);
+        });
+
+        // 4. Hitung dan Tampilkan QR Beserta Hasil
+        function tampilkanHasil(kodeUnik) {
+            const resultSection = document.getElementById('resultSection');
+            const qrcodeContainer = document.getElementById('qrcode');
+            const btnDownload = document.getElementById('btnDownloadQr');
+            
+            resultSection.style.display = 'block';
+            document.getElementById('outKode').innerText = kodeUnik;
+
+            // Tentukan URL Frontend (asumsi berada dalam 1 folder yg sama dengan index.html)
+            // Jika Anda test di localhost, otomatis linknya menyesuaikan ke index.html?kode=...
+            const pathUrl = window.location.href.split('admin.html')[0];
+            const urlFrontend = pathUrl + 'index.html?kode=' + kodeUnik;
+            
+            const outLink = document.getElementById('outLink');
+            outLink.href = urlFrontend;
+            outLink.innerText = urlFrontend;
+
+            // Hapus QR Lama
+            qrcodeContainer.innerHTML = "";
+            
+            // Buat QR Baru
+            qrInstance = new QRCode(qrcodeContainer, {
+                text: urlFrontend,
+                width: 200,
+                height: 200,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            // Beri waktu sejenak agar canvas tergambar, lalu pasang ke tombol download
+            setTimeout(() => {
+                const canvas = qrcodeContainer.querySelector('canvas');
+                if (canvas) {
+                    const imgUrl = canvas.toDataURL("image/png");
+                    btnDownload.href = imgUrl;
+                    btnDownload.download = `QR_${kodeUnik}.png`;
+                }
+            }, 500);
+            
+            // Scroll ke hasil
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
